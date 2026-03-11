@@ -10,7 +10,7 @@ to find the right skill for a task.
 
 ## Requirements
 
-- Python ≥ 3.13
+- Python ≥ 3.10
 - [uv](https://docs.astral.sh/uv/) (recommended) or pip
 
 ---
@@ -24,7 +24,7 @@ Add it as a dependency in the consuming project's `pyproject.toml`:
 ```toml
 [project]
 dependencies = [
-    "skills-on-demand @ git+https://github.com/your-org/skills-on-demand.git",
+    "skills-on-demand @ git+https://github.com/KameniAlexNea/skills-on-demand.git",
 ]
 ```
 
@@ -32,18 +32,28 @@ Or install directly with uv/pip:
 
 ```bash
 # with uv
-uv pip install "git+https://github.com/your-org/skills-on-demand.git"
+uv pip install "git+https://github.com/KameniAlexNea/skills-on-demand.git"
 
 # with pip
-pip install "git+https://github.com/your-org/skills-on-demand.git"
+pip install "git+https://github.com/KameniAlexNea/skills-on-demand.git"
 ```
 
 ### From a local clone
 
 ```bash
-git clone https://github.com/your-org/skills-on-demand.git
+git clone https://github.com/KameniAlexNea/skills-on-demand.git
 cd skills-on-demand
 uv pip install -e "."
+```
+
+### Skills collection for testing
+
+The package ships no skills — you must point `SKILLS_DIR` at your own folder.
+For a ready-made collection to test with, clone the scientific skills repo:
+
+```bash
+git clone https://github.com/KameniAlexNea/claude-scientific-skills.git
+export SKILLS_DIR="$PWD/claude-scientific-skills/scientific-skills"
 ```
 
 ---
@@ -87,7 +97,7 @@ file, so detailed skill documents surface better results.
 
 | Env variable  | Default | Description |
 |---|---|---|
-| `SKILLS_DIR`  | `<package-root>/claude-scientific-skills/scientific-skills` | Absolute path to the folder containing `SKILL.md` files |
+| `SKILLS_DIR`  | — (required) | Absolute path to the folder containing `SKILL.md` files |
 
 ---
 
@@ -119,7 +129,7 @@ Or, using `uvx` so no separate install is needed:
       "command": "uvx",
       "args": [
         "--from",
-        "git+https://github.com/your-org/skills-on-demand.git",
+        "git+https://github.com/KameniAlexNea/skills-on-demand.git",
         "skills-on-demand"
       ],
       "env": {
