@@ -108,29 +108,32 @@ class SkillIndex:
 
 
 # ---------------------------------------------------------------------------
-# Lazy singleton index
+# Index cache (keyed by resolved path)
 # ---------------------------------------------------------------------------
 
-_DEFAULT_SKILLS_DIR = (
-    Path(__file__).parent.parent
-    / "claude-scientific-skills"
-    / "scientific-skills"
-)
-
-_index: SkillIndex | None = None
+_indexes: dict[Path, SkillIndex] = {}
 
 
 def load_index(skills_dir: str | Path | None = None) -> SkillIndex:
-    """Load (or return cached) the skill index."""
-    global _index
-    if _index is None:
-        directory = Path(
-            skills_dir
-            or os.environ.get("SKILLS_DIR", str(_DEFAULT_SKILLS_DIR))
+    """Load (or return cached) the skill index for *skills_dir*.
+
+    The directory is resolved from, in order:
+    1. The *skills_dir* argument.
+    2. The ``SKILLS_DIR`` environment variable.
+
+    Raises ``ValueError`` if neither is provided.
+    Each unique resolved path gets its own cached index.
+    """
+    raw = skills_dir or os.environ.get("SKILLS_DIR")
+    if not raw:
+        raise ValueError(
+            "No skills directory specified. "
+            "Pass skills_dir= or set the SKILLS_DIR environment variable."
         )
-        skills = scan_skills(directory)
-        _index = SkillIndex(skills)
-    return _index
+    resolved = Path(raw).resolve()
+    if resolved not in _indexes:
+        _indexes[resolved] = SkillIndex(scan_skills(resolved))
+    return _indexes[resolved]
 
 
 # ---------------------------------------------------------------------------
